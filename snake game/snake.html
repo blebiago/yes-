@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Snake Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0d1117;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    canvas {
+      background-color: #161b22;
+      border: 2px solid #58a6ff;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #58a6ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐍 Snake Game</h1>
+  <canvas id="game" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+
+    const gridSize = 20;
+    const tileCount = canvas.width / gridSize;
+
+    let snake = [{ x: 10, y: 10 }];
+    let direction = { x: 0, y: 0 };
+    let apple = { x: 15, y: 15 };
+    let score = 0;
+    let gameOver = false;
+    let gameStarted = false;
+
+    function gameLoop() {
+      setTimeout(() => {
+        requestAnimationFrame(gameLoop);
+      }, 100);
+
+      if (!gameStarted) {
+        ctx.fillStyle = "#161b22";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#58a6ff";
+        ctx.font = "20px Courier New";
+        ctx.fillText("Press Arrow Key to Start", 80, 200);
+        return;
+      }
+
+      if (gameOver) {
+        ctx.fillStyle = "#ff4d4d";
+        ctx.font = "24px Courier New";
+        ctx.fillText("Game Over!", 140, 200);
+        ctx.fillText("Score: " + score, 150, 230);
+        return;
+      }
+
+      // Move snake
+      const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+
+      // Wall collision
+      if (head.x < 0 || head.y < 0 || head.x >= tileCount || head.y >= tileCount) {
+        gameOver = true;
+        return;
+      }
+
+      // Self collision
+      for (let segment of snake) {
+        if (segment.x === head.x && segment.y === head.y) {
+          gameOver = true;
+          return;
+        }
+      }
+
+      snake.unshift(head);
+
+      // Apple collision
+      if (head.x === apple.x && head.y === apple.y) {
+        score++;
+        apple = {
+          x: Math.floor(Math.random() * tileCount),
+          y: Math.floor(Math.random() * tileCount)
+        };
+      } else {
+        snake.pop();
+      }
+
+      // Clear canvas
+      ctx.fillStyle = "#161b22";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw snake
+      ctx.fillStyle = "#58a6ff";
+      for (let segment of snake) {
+        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+      }
+
+      // Draw apple
+      ctx.fillStyle = "#ff4d4d";
+      ctx.fillRect(apple.x * gridSize, apple.y * gridSize, gridSize - 2, gridSize - 2);
+
+      // Draw score
+      ctx.fillStyle = "#c9d1d9";
+      ctx.font = "16px Courier New";
+      ctx.fillText("Score: " + score, 10, 20);
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (!gameStarted) {
+        gameStarted = true;
+      }
+
+      switch (e.key) {
+        case "ArrowUp":
+          if (direction.y === 0) direction = { x: 0, y: -1 };
+          break;
+        case "ArrowDown":
+          if (direction.y === 0) direction = { x: 0, y: 1 };
+          break;
+        case "ArrowLeft":
+          if (direction.x === 0) direction = { x: -1, y: 0 };
+          break;
+        case "ArrowRight":
+          if (direction.x === 0) direction = { x: 1, y: 0 };
+          break;
+      }
+    });
+
+    gameLoop();
+  </script>
+</body>
+</html>

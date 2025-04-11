@@ -1,0 +1,53 @@
+/* styles.css */
+
+body {
+    background-color: #eaf6ff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #1a2a3a;
+    margin: 0;
+    padding: 0;
+}
+
+#header {
+    background-color: #004080;
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+}
+
+#header a {
+    color: #cce7ff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#header a:hover {
+    text-decoration: underline;
+}
+
+#content {
+    padding: 25px;
+    background-color: #f8fbff;
+}
+
+#media {
+    padding: 25px;
+    background-color: #dceeff;
+    text-align: center;
+}
+
+#gear-section {
+    padding: 25px;
+    background-color: #f0f8ff;
+}
+
+h2, h3 {
+    color: #004080;
+}
+
+img {
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
+}
+
